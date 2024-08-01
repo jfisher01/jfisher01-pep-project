@@ -12,7 +12,7 @@ public class Message {
     public int message_id;
     /**
      * The id for the user who has posted this message. We will assume that this is provided by the front-end of this
-     * application.
+     * application.  
      */
     public int posted_by;
     /**
