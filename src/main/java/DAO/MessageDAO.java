@@ -8,7 +8,12 @@ import java.util.List;
 
 public class MessageDAO {
 
-    public Message insertMessage(Message message){
+    /**
+     * 
+     * @param message
+     * @return
+     */
+    public Message insertNewMessage(Message message){
         Connection connection = ConnectionUtil.getConnection();
         try {
               //insert new message into the database
@@ -24,7 +29,8 @@ public class MessageDAO {
             ResultSet pkeyResultSet = preparedStatement.getGeneratedKeys();
             if(pkeyResultSet.next()){
                 int generated_message_id = (int) pkeyResultSet.getLong(1);
-                return new Message(generated_message_id, message.getPosted_by(), message.getMessage_text(),message.getTime_posted_epoch() );
+              
+		  return new Message(generated_message_id, message.getPosted_by(), message.getMessage_text(),message.getTime_posted_epoch() );
             }
         }catch(SQLException e){
             System.out.println(e.getMessage());
@@ -32,10 +38,11 @@ public class MessageDAO {
         return null;
     }
 
-    /**
-     * 
-     * @return
-     */
+
+/**
+ * 
+ * @return
+ */
 public List<Message> getAllMessages(){
 
         Connection connection = ConnectionUtil.getConnection();
@@ -66,7 +73,7 @@ public List<Message> getAllMessages(){
  * @param id
  * @return
  */
- public Message getMessageById(int id){
+    public Message getMessageById(int id){
         Connection connection = ConnectionUtil.getConnection();
         try {
             
@@ -110,7 +117,7 @@ public List<Message> getAllMessages(){
 			 rs.getInt("posted_by"),
                         rs.getString("message_text"),
                         rs.getLong("time_posted_epoch"));
-                
+                getMessageById(id).equals(null);
             }
         }catch(SQLException e){
             System.out.println(e.getMessage());
@@ -119,13 +126,37 @@ public List<Message> getAllMessages(){
     }
 
 
+/**
+ * 
+ * @param id
+ * @param message
+ */
+public void updateMessage(int id, Message message){ 
+
+    Connection connection = ConnectionUtil.getConnection();
+    try {
+       
+        String sql = "UPDATE message SET message_text = ? WHERE message_id = ? ";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        
+      
+        preparedStatement.setString(1,message.getMessage_text());
+         preparedStatement.setInt(2, id );
+     
+
+        preparedStatement.executeUpdate();
+    }catch(SQLException e){
+        System.out.println(e.getMessage());
+    }
+}
+
 
 /**
  * 
  * @param posted_by
  * @return
  */
-public  ArrayList<Message> getAllpostByUser(int posted_by ){
+public  ArrayList<Message> getAllMessageByThisUser(int posted_by ){
 
         Connection connection = ConnectionUtil.getConnection();
         ArrayList<Message> postedBy = new ArrayList<>();
@@ -136,7 +167,7 @@ public  ArrayList<Message> getAllpostByUser(int posted_by ){
 
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
           
-            preparedStatement.setInt(0, posted_by);  
+            preparedStatement.setInt(1, posted_by);  
 
             ResultSet rs = preparedStatement.executeQuery();
             while(rs.next()){
@@ -154,25 +185,4 @@ public  ArrayList<Message> getAllpostByUser(int posted_by ){
         }
         return null;
     }
-
-/**
- * 
- * @param message_id
- * @param message
- * @return
- */
-    public Message updateMessage(int message_id, Message message){
-
-           if(this.getMessageById(message_id) == null ){
-            
-            return null;
-           }      
-           else{ 
-        
-           this.updateMessage(message_id, message);
-          return this.getMessageById(message_id);
-           }
-    }
-
-
 }
