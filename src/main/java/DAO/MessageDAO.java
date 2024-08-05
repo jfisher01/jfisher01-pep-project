@@ -136,7 +136,7 @@ public void updateMessage(int id, Message message){
     Connection connection = ConnectionUtil.getConnection();
     try {
        
-        String sql = "UPDATE message SET message_text = ? WHERE message_id = ? ";
+        String sql = "UPDATE message SET  message_text = ? WHERE message_id = ? ";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         
       
@@ -149,6 +149,7 @@ public void updateMessage(int id, Message message){
         System.out.println(e.getMessage());
     }
 }
+
 
 
 /**
