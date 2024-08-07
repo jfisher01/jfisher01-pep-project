@@ -84,11 +84,12 @@ public class SocialMediaController {
         ObjectMapper mapper = new ObjectMapper();
         Account myAccount = mapper.readValue(ctx.body(), Account.class);
        Account logInAccount = accountService.logIntoAccount(myAccount, "username", "passowrd");
-       //System.out.println(logInAccount);
+      
         if (logInAccount == null) {
             
             ctx.status(401);
-        } else {
+        } 
+        else {
 
             ctx.status(HttpStatus.OK).status(200).json(mapper.writeValueAsString(logInAccount));
         }
@@ -114,7 +115,13 @@ public class SocialMediaController {
     }
 
     private void getAllMessagesHandler(Context ctx) {
+
         List<Message> messages = messageService.getAllMessages();
+
+        if(message.equals(null)){
+          ctx.status(200);
+
+        }
         ctx.status(200).json(messages);
     }
 
@@ -147,6 +154,7 @@ public class SocialMediaController {
     }
 
     private void updateMessageHandler(Context ctx) throws JsonProcessingException {
+        
         ObjectMapper mapper = new ObjectMapper();
         Message message = mapper.readValue(ctx.body(), Message.class);
         int message_id = Integer.parseInt(ctx.pathParam("message_id"));
@@ -161,14 +169,15 @@ public class SocialMediaController {
     }
 
     public void getAllMessagesFromUserHandler(Context ctx) {
-     //int posted_by = Integer.parseInt(ctx.pathParam("poste_by"));
-       //  Message postedByThisUser = ctx.bodyAsClass(Message.class);
-       //  Message messageByPoster = messageService.getAllPostByOneUser(posted_by);
-      // List<Message> message = messageService.getAllPostByOneUser(posted_by); 
-      Message message = ctx.bodyAsClass(Message.class);
-      Message userMessage = messageService.addMessage(message);    // .addBook(book); // notice the use of the service object
-      ctx.status(201).json(userMessage);
-       
-      // ctx.status(200).json(messageService.getAllPostByOneUser(posted_by));
+
+      int message_by = Integer.parseInt(ctx.pathParam("message_id"));
+
+      List<Message> messages = messageService.getAllPostByOneUser(message_by);
+      
+         messages.add(message)   ;
+   
+           
+      
+      ctx.status(200).json(messageService.getAllPostByOneUser(message_by));
     }
 }

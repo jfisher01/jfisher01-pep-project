@@ -105,7 +105,7 @@ public List<Message> getAllMessages(){
 
         Connection connection = ConnectionUtil.getConnection();
         try {
-            //Write SQL logic here
+           
             String sql = "DELETE FROM message WHERE message_id = ? ";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
@@ -113,18 +113,7 @@ public List<Message> getAllMessages(){
 
              preparedStatement.executeUpdate();
 
-         /* 
-            while(rs.next()){
-                Message message = new Message(rs.getInt("id"),
-			 rs.getInt("posted_by"),
-                        rs.getString("message_text"),
-                        rs.getLong("time_posted_epoch"));
-                getMessageById(id).equals(null);
-             
-
-
-            }
-                */
+                
         }catch(SQLException e){
             System.out.println(e.getMessage());
         }
@@ -149,8 +138,8 @@ public void updateMessage(int id, Message message){
         preparedStatement.setString(1,message.getMessage_text());
          preparedStatement.setInt(2, id );
      
-
-        preparedStatement.executeUpdate();
+         preparedStatement.executeUpdate();
+        
     }catch(SQLException e){
         System.out.println(e.getMessage());
     }

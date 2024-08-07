@@ -43,7 +43,7 @@ public class MessageService {
      */
     public Message addMessage(Message message) {
 
-        if ((message.getMessage_text() != " " )  && (message.getMessage_text().length() <= 225)
+        if ((message.getMessage_text() != "" )  && (message.getMessage_text().length() <= 225)
                 && (messageDAO.getMessageById(message.posted_by) != null)) {
 
             return messageDAO.insertNewMessage(message);
@@ -67,7 +67,7 @@ public class MessageService {
      */
     public List<Message> getAllMessages() {
 
-        if (messageDAO.getAllMessages().isEmpty()) {
+        if (messageDAO.getAllMessages().equals(null)) {
             return null;
         } else {
 
@@ -159,7 +159,7 @@ public class MessageService {
      */
     public Message updatMessage(Message message, int message_id, String message_text) {
 
-        if ((this.messageDAO.getMessageById(message_id) != null) && (message.getMessage_text() != " ")
+        if ((this.messageDAO.getMessageById(message_id) != null) && (message.getMessage_text() != "")
                 && (message.getMessage_text().length() <= 225)) {
             this.messageDAO.updateMessage(message_id, message);
 
@@ -192,7 +192,7 @@ public class MessageService {
      */
     public ArrayList<Message> getAllPostByOneUser(int posted_by) {
 
-        if (messageDAO.getAllMessageByThisUser(posted_by).isEmpty()) {
+        if (messageDAO.getAllMessageByThisUser(posted_by).equals(null)) {
             return null;
         }
 
