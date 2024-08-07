@@ -111,18 +111,24 @@ public List<Message> getAllMessages(){
 
             preparedStatement.setInt(1, id);
 
-            ResultSet rs = preparedStatement.executeQuery();
+             preparedStatement.executeUpdate();
+
+         /* 
             while(rs.next()){
                 Message message = new Message(rs.getInt("id"),
 			 rs.getInt("posted_by"),
                         rs.getString("message_text"),
                         rs.getLong("time_posted_epoch"));
                 getMessageById(id).equals(null);
+             
+
+
             }
+                */
         }catch(SQLException e){
             System.out.println(e.getMessage());
         }
-    
+      
     }
 
 

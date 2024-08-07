@@ -31,8 +31,8 @@ public class AccountService {
 
     public Account addAccount(Account account) {
 
-        if ((account.getUsername() != " ") && (account.getPassword().length() >= 4)
-                && (account.getUsername() == null)) {
+        if ((account.getUsername() != "") && (account.getPassword().length() >= 4)
+                && (account.getUsername() != null)) {
             return accountDAO.insertAccount(account);
         } else {
             return null;
@@ -58,6 +58,8 @@ public class AccountService {
 
     public Account logIntoAccount(Account account, String username, String password) {
 
+
+        
         if ( account != null && account.getUsername().equals(username) && account.getPassword().equals(password)) {
 
             return accountDAO.getAccountByUsernameAndPassword(username, password);

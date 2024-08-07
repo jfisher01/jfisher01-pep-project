@@ -9,10 +9,12 @@ import Model.Message;
 import Service.AccountService;
 import Service.MessageService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.javalin.Javalin;
 import io.javalin.http.Context;
+import io.javalin.http.HttpStatus;
 
 /**
  * TODO: You will need to write your own endpoints and handlers for your
@@ -50,8 +52,7 @@ public class SocialMediaController {
         app.get("/messages/{message_id}", this::getMessageByIdHandler);
         app.delete("/messages/{message_id}", this::deleteMessageByIdHandler);
         app.patch("/messages/{message_id}", this::updateMessageHandler);
-        app.get("/accounts/{account_id}/messages", this::getAllMessagesFromAccountHandler);
-
+        app.get("/accounts/{account_id}/messages", this::getAllMessagesFromUserHandler);
        // app.start(8080);
 
         return app;
@@ -66,10 +67,11 @@ public class SocialMediaController {
         ObjectMapper mapper = new ObjectMapper();
         Account account = mapper.readValue(ctx.body(), Account.class);
         Account addedAccount = accountService.addAccount(account);
+        System.out.println(addedAccount);
         if (addedAccount == null) {
-            ctx.status(200);
+            ctx.status(400);
         } else {
-            ctx.json(mapper.writeValueAsString(addedAccount));
+            ctx.status(200).json(mapper.writeValueAsString(addedAccount));
         }
     }
 
@@ -84,9 +86,11 @@ public class SocialMediaController {
        Account logInAccount = accountService.logIntoAccount(myAccount, "username", "passowrd");
        //System.out.println(logInAccount);
         if (logInAccount == null) {
+            
             ctx.status(401);
         } else {
-            ctx.status(200).json(mapper.writeValueAsString(logInAccount));
+
+            ctx.status(HttpStatus.OK).status(200).json(mapper.writeValueAsString(logInAccount));
         }
     }
 
@@ -102,8 +106,9 @@ public class SocialMediaController {
         Message message = mapper.readValue(ctx.body(), Message.class);
         Message addedMessage = messageService.addMessage(message);
         if (addedMessage != null) {
-         ctx.json(mapper.writeValueAsString(addedMessage));
-        } else {
+         ctx.status(200).json(mapper.writeValueAsString(addedMessage));
+        } 
+        else {
             ctx.status(400);
         }
     }
@@ -127,18 +132,18 @@ public class SocialMediaController {
     private void deleteMessageByIdHandler(Context ctx) throws JsonProcessingException {
 
         ObjectMapper mapper = new ObjectMapper();
-        Message message = mapper.readValue(ctx.body(), Message.class);
         int message_id = Integer.parseInt(ctx.pathParam("message_id"));
-        // Message deleteMessage =
-        messageService.deleteUserMessageById(message_id); // updatMessage(message_id, message);
+
+       Message deletedMessage = messageService.deleteUserMessageById(message_id);
+
         System.out.println("Message deleted!");
-        if (message == null) {
-            ctx.status(400);
+        if (deletedMessage == null) {
+            ctx.status(200);
         } else {
-            ctx.json(mapper.writeValueAsString(message));
+            ctx.json(mapper.writeValueAsString(deletedMessage));
         }
 
-        // ctx.json(messageService.deleteUserMessageById(ctx.pathParam(message_id)));
+
     }
 
     private void updateMessageHandler(Context ctx) throws JsonProcessingException {
@@ -155,10 +160,15 @@ public class SocialMediaController {
 
     }
 
-    public void getAllMessagesFromAccountHandler(Context ctx) {
-        int posted_by = Integer.parseInt(ctx.pathParam("poste_by"));
-
-        List<Message> message = messageService.getAllPostByOneUser(posted_by);
-        ctx.json(message);
+    public void getAllMessagesFromUserHandler(Context ctx) {
+     //int posted_by = Integer.parseInt(ctx.pathParam("poste_by"));
+       //  Message postedByThisUser = ctx.bodyAsClass(Message.class);
+       //  Message messageByPoster = messageService.getAllPostByOneUser(posted_by);
+      // List<Message> message = messageService.getAllPostByOneUser(posted_by); 
+      Message message = ctx.bodyAsClass(Message.class);
+      Message userMessage = messageService.addMessage(message);    // .addBook(book); // notice the use of the service object
+      ctx.status(201).json(userMessage);
+       
+      // ctx.status(200).json(messageService.getAllPostByOneUser(posted_by));
     }
 }

@@ -42,12 +42,13 @@ public class MessageService {
      * @return
      */
     public Message addMessage(Message message) {
-        if ((messageDAO.getMessageById(message.getMessage_id()) == null) && (message.getMessage_text().length() <= 225)
+
+        if ((message.getMessage_text() != " " )  && (message.getMessage_text().length() <= 225)
                 && (messageDAO.getMessageById(message.posted_by) != null)) {
 
             return messageDAO.insertNewMessage(message);
         }
-
+      
         return null;
     }
 
@@ -118,12 +119,14 @@ public class MessageService {
      * 
      * @param id
      */
-    public void deleteUserMessageById(int id) {
+    public Message deleteUserMessageById(int id) {
         if (messageDAO.getMessageById(id) != null) {
+            Message message =  messageDAO.getMessageById(id);
+            
             messageDAO.deleteMessageById(id);
-
+            return message;
         }
-        id = 0;
+        return null;
     }
 
     /*
