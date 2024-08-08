@@ -61,17 +61,20 @@ public class MessageService {
      * It is expected for the list to simply be empty if there are no messages
      * The response status should always be 200, which is the default.
      */
-    /**
-     * 
-     * @return
-     */
+ 
+     /**
+      * 
+      * @return
+      */
     public List<Message> getAllMessages() {
 
-        if (messageDAO.getAllMessages().equals(null)) {
-            return null;
+        List<Message> allMessages = messageDAO.getAllMessages();
+   
+        if (allMessages.equals(null)) {
+            return allMessages;
         } else {
 
-            return messageDAO.getAllMessages();
+            return allMessages;
         }
 
     }
@@ -192,13 +195,8 @@ public class MessageService {
      */
     public ArrayList<Message> getAllPostByOneUser(int posted_by) {
 
-        if (messageDAO.getAllMessageByThisUser(posted_by).equals(null)) {
-            return null;
-        }
+   
+        return messageDAO.getAllMessageByThisUser(posted_by);
 
-        else {
-            return messageDAO.getAllMessageByThisUser(posted_by);
-        }
     }
-
 }

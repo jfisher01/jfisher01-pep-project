@@ -58,31 +58,9 @@ public class AccountService {
 
     public Account logIntoAccount(Account account, String username, String password) {
 
+        account =  accountDAO.getAccountByUsernameAndPassword(account.getUsername(), account.getPassword()) ;
 
-        
-        if ( account != null && account.getUsername().equals(username) && account.getPassword().equals(password)) {
-
-            return accountDAO.getAccountByUsernameAndPassword(username, password);
-
-        }
-
-        else {
-            return null;
-        }
+            return account;
     }
-
-    /*
-     * public Account getUserAccountById(int id){
-     * return accountDAO.getAccountById(id);
-     * }
-     * 
-     */
-
-    /*
-     * public List<Account> getAllAccounts() {
-     * return accountDAO.getAllAccounts();
-     * }
-     * 
-     */
-
+    
 }

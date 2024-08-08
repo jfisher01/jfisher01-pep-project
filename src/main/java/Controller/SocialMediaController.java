@@ -53,7 +53,7 @@ public class SocialMediaController {
         app.delete("/messages/{message_id}", this::deleteMessageByIdHandler);
         app.patch("/messages/{message_id}", this::updateMessageHandler);
         app.get("/accounts/{account_id}/messages", this::getAllMessagesFromUserHandler);
-       // app.start(8080);
+      
 
         return app;
     }
@@ -81,17 +81,18 @@ public class SocialMediaController {
      * @throws JsonProcessingException
      */
     private void postLogIntoAccountHandler(Context ctx) throws JsonProcessingException {
+       
         ObjectMapper mapper = new ObjectMapper();
         Account myAccount = mapper.readValue(ctx.body(), Account.class);
        Account logInAccount = accountService.logIntoAccount(myAccount, "username", "passowrd");
       
         if (logInAccount == null) {
             
-            ctx.status(401);
+            ctx.status(401).status(HttpStatus.UNAUTHORIZED);
         } 
         else {
 
-            ctx.status(HttpStatus.OK).status(200).json(mapper.writeValueAsString(logInAccount));
+            ctx.status(200).json(mapper.writeValueAsString(logInAccount));
         }
     }
 
@@ -117,12 +118,12 @@ public class SocialMediaController {
     private void getAllMessagesHandler(Context ctx) {
 
         List<Message> messages = messageService.getAllMessages();
-
+        
         if(message.equals(null)){
           ctx.status(200);
 
         }
-        ctx.status(200).json(messages);
+        ctx.json(messages);
     }
 
     private void getMessageByIdHandler(Context ctx) {
@@ -170,14 +171,10 @@ public class SocialMediaController {
 
     public void getAllMessagesFromUserHandler(Context ctx) {
 
-      int message_by = Integer.parseInt(ctx.pathParam("message_id"));
+      int message_by = Integer.parseInt(ctx.pathParam("account_id"));
 
-      List<Message> messages = messageService.getAllPostByOneUser(message_by);
-      
-         messages.add(message)   ;
-   
-           
-      
       ctx.status(200).json(messageService.getAllPostByOneUser(message_by));
+     
+      
     }
 }
